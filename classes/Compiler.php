@@ -1,7 +1,7 @@
 <?php
-namespace cyclone\database;
+namespace cyclonephp\database;
 
-use cyclone\database\model\Select;
+use cyclonephp\database\model\Select;
 
 interface Compiler {
 
