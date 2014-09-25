@@ -1,6 +1,8 @@
 <?php
 namespace cyclonephp\database\model;
 
+use cyclonephp\database\DB;
+
 class Select {
 
     /**
@@ -56,14 +58,13 @@ class Select {
     }
 
     public function columns() {
-        $arr = func_get_args();
-        $this->columnsArr($arr);
+        $this->columnsArr(func_get_args());
         return $this;
     }
 
     public function columnsArr($columns) {
         if (empty($columns)) {
-            throw new \Exception('not yet implemented');
+            $this->projection = array(DB::expr('*'));
         } else {
             foreach ($columns as $col) {
                 $this->projection [] = $col;
@@ -78,13 +79,9 @@ class Select {
     }
 
     public function join($relation, $joinType = 'INNER') {
-        $join = array(
-            'relation' => $relation,
-            'type' => $joinType,
-            'conditions' => array()
-        );
-        $this->joins []= &$join;
-        $this->lastJoin = &$join;
+        $join = new JoinClause($relation, $joinType);
+        $this->joins []= $join;
+        $this->lastJoin = $join;
         return $this;
     }
 
@@ -97,22 +94,17 @@ class Select {
     }
 
     public function on() {
-        throw new \Exception('not yet implemented');
-        // $this->lastJoin['conditions'] []= cy\DB::create_expr(func_get_args());;
+        $this->lastJoin->addCondition(DB::createExpr(func_get_args()));
         return $this;
     }
 
     public function where() {
-        throw new \Exception('not yet implemented');
-        // $this->where_conditions []= cy\DB::create_expr(func_get_args());
+        $this->whereConditions []= DB::createExpr(func_get_args());
         return $this;
     }
 
     public function orderBy($column, $direction = 'ASC') {
-        $this->orderByClause []= array(
-            'column' => $column,
-            'direction' => $direction
-        );
+        $this->orderByClause []= new Ordering($column, $direction);
         return $this;
     }
 
@@ -122,8 +114,7 @@ class Select {
     }
 
     public function having() {
-        throw new \Exception('not yet implemented');
-        // $this->havingConditions []= cy\DB::create_expr(func_get_args());
+        $this->havingConditions []= DB::createExpr(func_get_args());
         return $this;
     }
 
@@ -143,6 +134,61 @@ class Select {
             'all' => $all
         );
         return $this;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getProjection() {
+        return $this->projection;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getFromClause() {
+        return $this->fromClause;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getJoins() {
+        return $this->joins;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getOrderByClause() {
+        return $this->orderByClause;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getHavingConditions() {
+        return $this->havingConditions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffset() {
+        return $this->offset;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getLimit() {
+        return $this->limit;
+    }
+    
+    public function getUnions() {
+        return $this->unions;
     }
 
 }

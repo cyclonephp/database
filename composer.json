@@ -15,7 +15,9 @@
 
 	},
 	"require-dev" : {
-		"phpunit/phpunit": "4.1.*"
+		"phpunit/phpunit": "4.1.*",
+                "phpdocumentor/phpdocumentor": "dev-master",
+                "phing/phing": "dev-master"
 	},
 	"autoload" : {
 		"psr-4" : {

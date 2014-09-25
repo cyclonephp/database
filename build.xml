@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="cyclonephp/database" default="package">
+    
+    <target name="test">
+        <phpunit codecoverage="false" haltonfailure="true" haltonerror="true"
+            bootstrap="vendor/autoload.php">
+            <batchtest>
+                <fileset dir="tests">
+                    <include name="**/*Test*.php" />
+                </fileset>
+            </batchtest>
+        </phpunit>
+    </target>
+    
+    <target name="generate-docs">
+        <phpdoc2 title="API documentation" destdir="docs">
+            <fileset dir="classes">
+                <include name="**/*.php" />
+            </fileset>
+        </phpdoc2>
+    </target>
+    
+    <target name="package" depends="generate-docs">
+        
+    </target>
+    
+    
+</project>
