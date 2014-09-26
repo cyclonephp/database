@@ -53,12 +53,12 @@ final class DB {
         return $rval->distinct();
     }
     
-    public function expr() {
+    public static function expr() {
         $args = func_get_args();
         return self::createExpr($args);
     }
     
-    public function createExpr(array $args) {
+    public static function createExpr(array $args) {
         switch (count($args)) {
             case 1:
                 if (is_array($args[0])) {
@@ -72,11 +72,11 @@ final class DB {
         }
     }
     
-    public function raw($arg) {
+    public static function raw($arg) {
         return new RawExpression($arg);
     }
     
-    private function createNullExpr($arg) {
+    private static function createNullExpr($arg) {
         if ($arg === null) {
             return new RawExpression('NULL');
         }
