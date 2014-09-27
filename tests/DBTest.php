@@ -40,7 +40,14 @@ class DBTest extends \PHPUnit_Framework_TestCase {
     }
     
     public function testCreateBinaryExpr() {
-        $actual = DB::expr(1, '=', 2);
+        $actual = DB::expr('a', '=', 'b');
+        $this->assertInstanceOf('cyclonephp\\database\\model\\BinaryExpression', $actual);
+    }
+    
+    public function testParam() {
+        $actual = DB::param('untrusted');
+        $this->assertInstanceOf('cyclonephp\\database\\model\\ParamExpression', $actual);
+        $this->assertEquals('untrusted', $actual->getRawParameter());
     }
     
 }

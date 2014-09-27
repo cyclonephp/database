@@ -6,6 +6,7 @@ use cyclonephp\database\model\SetExpression;
 use cyclonephp\database\model\UnaryExpression;
 use cyclonephp\database\model\BinaryExpression;
 use cyclonephp\database\model\RawExpression;
+use cyclonephp\database\model\Expression;
 use cyclonephp\database\model\ParamExpression;
 use cyclonephp\database\model\Identifier;
 
@@ -64,9 +65,15 @@ final class DB {
                 if (is_array($args[0])) {
                     return new SetExpression($args[0]);
                 }
-                return new ParamExpression($args[0]);
+                return self::id($args[0]);
             case 2:
-                return new UnaryExpression($args[0], self::createNullExpr($args[1]));
+                $operator = $args[0];
+                if ($args[1] instanceof Expression) {
+                    $operand = $args[1];
+                } else {
+                    $operand = self::createExpr(array($args[1]));
+                }
+                return new UnaryExpression($operator, $operand);
             case 3:
                 return new BinaryExpression(self::createNullExpr($args[0]), $args[1], self::createNullExpr($args[2]));
         }
@@ -83,6 +90,9 @@ final class DB {
         return $arg;
     }
     
+    public function param($toBeEscaped) {
+        return new ParamExpression($toBeEscaped);
+    }
     
     private function __construct() {
         

@@ -1,8 +1,9 @@
 <?php
-
 namespace cyclonephp\database\model;
 
-class Identifier {
+use cyclonephp\database\Compiler;
+
+class Identifier implements Expression {
     
     private $relationName;
     
@@ -20,5 +21,9 @@ class Identifier {
     function getColumnName() {
         return $this->columnName;
     }
-    
+
+    public function compileSelf(Compiler $compiler) {
+        throw new \Exception('not yet implemented');
+    }
+
 }
