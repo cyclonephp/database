@@ -20,7 +20,7 @@
         </phpdoc2>
     </target>
     
-    <target name="package" depends="generate-docs">
+    <target name="package" depends="test,generate-docs">
         
     </target>
     
