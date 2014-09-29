@@ -68,29 +68,23 @@ final class DB {
                 return self::id($args[0]);
             case 2:
                 $operator = $args[0];
-                if ($args[1] instanceof Expression) {
-                    $operand = $args[1];
-                } else {
-                    $operand = self::createExpr(array($args[1]));
-                }
-                return new UnaryExpression($operator, $operand);
+                return new UnaryExpression($operator, self::toExpression($operand));
             case 3:
-                return new BinaryExpression(self::createNullExpr($args[0]), $args[1], self::createNullExpr($args[2]));
+                return new BinaryExpression(self::toExpression($args[0]), $args[1], self::toExpression($args[2]));
         }
     }
+    
+    private static function toExpression($expr) {
+		if ($expr instanceof Expression)
+			return $expr;
+		return self::expr($expr);
+	}
     
     public static function raw($arg) {
         return new RawExpression($arg);
     }
     
-    private static function createNullExpr($arg) {
-        if ($arg === null) {
-            return new RawExpression('NULL');
-        }
-        return $arg;
-    }
-    
-    public function param($toBeEscaped) {
+    public static function param($toBeEscaped) {
         return new ParamExpression($toBeEscaped);
     }
     

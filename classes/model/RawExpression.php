@@ -4,12 +4,14 @@ namespace cyclonephp\database\model;
 use cyclonephp\database\Compiler;
 
 class RawExpression implements Expression {
+	
+	const NULL_LITERAL = 'NULL';
     
     private $expression;
     
     function __construct($expression) {
         if ($expression === null) {
-            $this->expression = 'NULL';
+            $this->expression = self::NULL_LITERAL;
         } else {
             $this->expression = $expression;
         }
