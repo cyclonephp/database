@@ -3,8 +3,8 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\DB;
 
-class Select {
-
+class Select implements Expression {
+    
     /**
      * If <code>TRUE</code> then the query will be compiled as a
      * <code>SELECT DISTINCT</code> query.
@@ -136,59 +136,8 @@ class Select {
         return $this;
     }
     
-    /**
-     * @return array
-     */
-    public function getProjection() {
-        return $this->projection;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getFromClause() {
-        return $this->fromClause;
-    }
-    
-    /**
-     * 
-     * @return array
-     */
-    public function getJoins() {
-        return $this->joins;
-    }
-    
-    /**
-     * 
-     * @return array
-     */
-    public function getOrderByClause() {
-        return $this->orderByClause;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getHavingConditions() {
-        return $this->havingConditions;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOffset() {
-        return $this->offset;
-    }
-    
-    /**
-     * @return int
-     */
-    public function getLimit() {
-        return $this->limit;
-    }
-    
-    public function getUnions() {
-        return $this->unions;
+    public function compileSelf(\cyclonephp\database\Compiler $compiler) {
+        throw new \Exception('not yet implemented');
     }
 
 }

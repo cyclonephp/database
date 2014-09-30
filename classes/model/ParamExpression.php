@@ -1,4 +1,5 @@
 <?php
+
 namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;

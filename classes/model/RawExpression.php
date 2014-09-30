@@ -1,11 +1,12 @@
 <?php
+
 namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;
 
 class RawExpression implements Expression {
 	
-	const NULL_LITERAL = 'NULL';
+    const NULL_LITERAL = 'NULL';
     
     private $expression;
     

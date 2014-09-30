@@ -24,7 +24,7 @@ class JoinClause {
         if ($this->joinCondition === null) {
             $this->joinCondition = $condition;
         } else {
-            $this->joinCondition = DB::expr($this->joinCondition, Expression::OP_AND, $condition);
+            $this->joinCondition = DB::expr($this->joinCondition, 'AND', $condition);
         }
     }    
     

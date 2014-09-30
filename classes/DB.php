@@ -1,4 +1,5 @@
 <?php
+
 namespace cyclonephp\database;
 
 use cyclonephp\database\model\Select;
@@ -10,25 +11,18 @@ use cyclonephp\database\model\Expression;
 use cyclonephp\database\model\ParamExpression;
 use cyclonephp\database\model\Identifier;
 
-
 final class DB {
-    
-    const OP_OR = 'OR';
-    
-    const OP_AND = 'AND';
-    
-    const OP_NOT = 'NOT';
-    
+
     /**
      * 
-     * @param type $identifier
+     * @param string $identifier
      * @return \cyclonephp\database\model\Identifier
      * @throws \InvalidArgumentException if $identifier contains more than one dot
      */
     public static function id($identifier) {
         $segments = explode('.', $identifier);
         switch (count($segments)) {
-            case 1: 
+            case 1:
                 return new Identifier(null, $segments[0]);
             case 2:
                 return new Identifier($segments[0], $segments[1]);
@@ -36,7 +30,7 @@ final class DB {
                 throw new \InvalidArgumentException("invalid identifier: '{$identifier}'");
         }
     }
-    
+
     /**
      * @return \cyclonephp\database\model\Select
      */
@@ -46,19 +40,19 @@ final class DB {
         $rval->columnsArr($args);
         return $rval;
     }
-    
+
     public static function selectDistinct() {
         $args = func_get_args();
         $rval = new Select;
         $rval->columnsArr($args);
         return $rval->distinct();
     }
-    
+
     public static function expr() {
         $args = func_get_args();
         return self::createExpr($args);
     }
-    
+
     public static function createExpr(array $args) {
         switch (count($args)) {
             case 1:
@@ -73,23 +67,23 @@ final class DB {
                 return new BinaryExpression(self::toExpression($args[0]), $args[1], self::toExpression($args[2]));
         }
     }
-    
+
     private static function toExpression($expr) {
-		if ($expr instanceof Expression)
-			return $expr;
-		return self::expr($expr);
-	}
-    
+        if ($expr instanceof Expression)
+            return $expr;
+        return self::expr($expr);
+    }
+
     public static function raw($arg) {
         return new RawExpression($arg);
     }
-    
+
     public static function param($toBeEscaped) {
         return new ParamExpression($toBeEscaped);
     }
-    
+
     private function __construct() {
         
     }
-    
+
 }
