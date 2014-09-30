@@ -38,11 +38,11 @@ class Select implements Expression {
 
     private $lastJoin;
 
-    private $whereConditions = array();
+    private $whereCondition = array();
 
     private $groupByClause = array();
 
-    private $havingConditions = array();
+    private $havingCondition = array();
 
     private $orderByClause = array();
 
@@ -97,10 +97,18 @@ class Select implements Expression {
         $this->lastJoin->addCondition(DB::createExpr(func_get_args()));
         return $this;
     }
-
-    public function where() {
-        $this->whereConditions []= DB::createExpr(func_get_args());
+    
+    public function where(Expression $whereCondition) {
+        $this->whereCondition = $whereCondition;
         return $this;
+    }
+
+    public function andWhere(Expression $whereCondition) {
+        if ($this->whereCondition === null) {
+            return $this->where($whereCondition);
+        } else {
+            return $this->where(DB::expr($this->whereCondition, 'AND', $whereCondition));
+        }
     }
 
     public function orderBy($column, $direction = 'ASC') {
@@ -113,8 +121,16 @@ class Select implements Expression {
         return $this;
     }
 
-    public function having() {
-        $this->havingConditions []= DB::createExpr(func_get_args());
+    public function andHaving(Expression $havingCondition) {
+        if ($this->havingCondition === null) {
+            return $this->having($havingCondition);
+        } else {
+            return $this->having(DB::expr($this->havingCondition, 'AND', $havingCondition));
+        }
+    }
+    
+    public function having(Expression $havingCondition) {
+        $this->havingCondition = $havingCondition;
         return $this;
     }
 

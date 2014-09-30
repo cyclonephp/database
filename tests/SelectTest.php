@@ -11,11 +11,13 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
                 ->distinct()
                 ->from('table')
                 ->join('table2')->on('table.a', '=', 'table2.a')
-                ->where('a', '=', 'b')
+                ->where(DB::expr('a', '=', 'b'))
+                ->andWhere(DB::expr('a', '=', 'b'))
                 ->orderBy('a')
                 ->orderBy('a', 'desc')
                 ->groupBy('a', 'b')
-                ->having('a', '=', 'b');
+                ->having(DB::expr('a', '=', 'b'))
+                ->andHaving(DB::expr('a', '=', 'b'));
     }
     
 }
