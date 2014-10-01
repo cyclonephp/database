@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;
 
-class SetExpression implements Expression {
+class SetExpression extends AbstractExpression {
 
     private $elements;
 

@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;
 
-class ParamExpression implements Expression {
+class ParamExpression extends AbstractExpression {
     
     private $rawParameter;
     

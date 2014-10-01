@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;
 
-class RawExpression implements Expression {
+class RawExpression extends AbstractExpression {
 	
     const NULL_LITERAL = 'NULL';
     

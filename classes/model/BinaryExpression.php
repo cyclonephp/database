@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;
 
-class BinaryExpression implements Expression {
+class BinaryExpression extends AbstractExpression {
 
     private $leftOperand;
     

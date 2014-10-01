@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\Compiler;
 
-class Identifier implements Expression {
+class Identifier extends AbstractExpression {
     
     private $relationName;
     

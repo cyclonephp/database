@@ -3,7 +3,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\DB;
 
-class Select implements Expression {
+class Select extends AbstractExpression {
     
     /**
      * If <code>TRUE</code> then the query will be compiled as a
