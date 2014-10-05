@@ -1,7 +1,7 @@
 <?php
 namespace cyclonephp\database\model;
 
-class ProjectionEntry {
+class AliasedExpression implements Expression {
     
     /**
      *
@@ -24,8 +24,17 @@ class ProjectionEntry {
         return $this->expression;
     }
 
-    function alias() {
+    function getAlias() {
         return $this->alias;
     }
+    
+    public function compileSelf(\cyclonephp\database\Compiler $compiler) {
+        
+    }
+    
+    public function alias($alias) {
+        throw new \Exception("already an alias expression");
+    }
+
     
 }

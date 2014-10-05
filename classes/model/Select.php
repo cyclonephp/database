@@ -14,40 +14,50 @@ class Select extends AbstractExpression {
     private $isDistinct = false;
 
     /**
-     * Sequence of columns to be selected. Every item of the array can be:
-     * <ul>
-     * <li>a string (column name)</li>
-     * <li>an array that's 0th item is a column name, the 1st is a column alias</li>
-     * <li>an array that's 0th item is a @c \cyclone\db\Expression instance, the 1st item
-     *      is an alias</li>
-     * </ul>
-     *
-     * @var array
+     * @var Expression[]
      */
     private $projection = array();
 
     /**
-     * @var array
+     * @var Expression[]
      */
     private $fromClause = array();
 
     /**
-     * @var array
+     * @var JoinClause[]
      */
     private $joins = array();
 
+    /**
+     * @var JoinClause
+     */
     private $lastJoin;
 
-    private $whereCondition = array();
+    /**
+     * @var Expression
+     */
+    private $whereCondition;
 
     private $groupByClause = array();
 
+    /**
+     * @var Expression
+     */
     private $havingCondition = array();
 
+    /**
+     * @var Ordering[]
+     */
     private $orderByClause = array();
 
+    /**
+     * @var int
+     */
     private $offset;
 
+    /**
+     * @var int
+     */
     private $limit;
 
     private $unions = array();
