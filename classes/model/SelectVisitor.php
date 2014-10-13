@@ -17,7 +17,7 @@ interface SelectVisitor {
     public function visitFromClause(array $fromClause);
     
     /**
-     * @param JoinClause[] $joinClauses
+     * @param JoinClause[] $joins
      */
     public function visitJoinClauses(array $joins);
     
@@ -25,5 +25,26 @@ interface SelectVisitor {
      * @param Expression $whereCondition
      */
     public function visitWhereCondition(Expression $whereCondition = NULL);
+    
+    /**
+     * @param Expression[] $groupByClause
+     */
+    public function visitGroupByClause(array $groupByClause);
+    
+    /**
+     * @param Expression $havingCondition
+     */
+    public function visitHavingCondition(Expression $havingCondition = NULL);
+    
+    /**
+     * @param Ordering[] $orderByClause
+     */
+    public function visitOrderByClause(array $orderByClause);
+    
+    /**
+     * @param int $offset
+     * @param int $limit
+     */
+    public function visitOffsetLimit($offset, $limit);
     
 }

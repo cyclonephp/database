@@ -2,6 +2,7 @@
 namespace cyclonephp\database\model;
 
 use cyclonephp\database\DB;
+use cyclonephp\database\Compiler;
 
 class Select extends AbstractExpression {
     
@@ -73,6 +74,10 @@ class Select extends AbstractExpression {
         $visitor->visitFromClause($this->fromClause);
         $visitor->visitJoinClauses($this->joins);
         $visitor->visitWhereCondition($this->whereCondition);
+        $visitor->visitGroupByClause($this->groupByClause);
+        $visitor->visitHavingCondition($this->havingCondition);
+        $visitor->visitOrderByClause($this->orderByClause);
+        $visitor->visitOffsetLimit($this->offset, $this->limit);
     }
 
     public function distinct($isDistinct = true) {
@@ -150,6 +155,9 @@ class Select extends AbstractExpression {
     }
 
     public function orderBy($column, $direction = 'ASC') {
+        if (!$column instanceof Expression) {
+            $column = DB::expr($column);
+        }
         $this->orderByClause []= new Ordering($column, $direction);
         return $this;
     }
@@ -197,7 +205,7 @@ class Select extends AbstractExpression {
         return $this;
     }
     
-    public function compileSelf(\cyclonephp\database\Compiler $compiler) {
+    public function compileSelf(Compiler $compiler) {
         throw new \Exception('not yet implemented');
     }
 

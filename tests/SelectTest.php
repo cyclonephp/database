@@ -74,4 +74,42 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
         DB::select()->where(DB::expr('a', '=', 'b'))->accept($visitor);
     }
     
+    public function testVisitGroupByClause() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitGroupByClause')
+                ->with($this->equalTo([
+                    new Identifier('tbl1', 'a'),
+                    new Identifier('tbl1', 'b')
+                ]));
+        DB::select()->groupBy('tbl1.a', DB::expr('tbl1.b'))->accept($visitor);
+    }
+    
+    public function testVisitHavingCondition() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitHavingCondition')
+                ->with($this->equalTo(new BinaryExpression(DB::id('a'), '=', DB::id('b'))));
+        DB::select()->having(DB::expr('a', '=', 'b'))->accept($visitor);
+    }
+    
+    public function testVisitOrderByClause() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitOrderByClause')
+                ->with($this->equalTo([
+                    new Ordering(DB::id('a'), 'ASC'),
+                    new Ordering(DB::id('b'), 'DESC')
+                ]));
+        DB::select()->orderBy('a')->orderBy(DB::expr('b'), 'DESC')->accept($visitor);
+    }
+    
+    public function testVisitOffsetLimit() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitOffsetLimit')
+                ->with($this->equalTo(20), $this->equalTo(1));
+        DB::select()->offset(20)->limit(true)->accept($visitor);
+    }
+    
 }
