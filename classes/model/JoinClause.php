@@ -11,13 +11,14 @@ class JoinClause {
     
     private $joinType;
     
-    public function __construct($joinedRelation, $joinType) {
+    public function __construct(Expression $joinedRelation, $joinType) {
         $this->joinedRelation = $joinedRelation;
         $this->joinType = $joinType;
     }
     
     public function joinCondition($joinCondition) {
         $this->joinCondition = $joinCondition;
+        return $this;
     }
     
     public function addCondition($condition) {
@@ -26,6 +27,7 @@ class JoinClause {
         } else {
             $this->joinCondition = DB::expr($this->joinCondition, 'AND', $condition);
         }
+        return $this;
     }    
     
 }

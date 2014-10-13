@@ -16,4 +16,9 @@ interface SelectVisitor {
      */
     public function visitFromClause(array $fromClause);
     
+    /**
+     * @param JoinClause[] $joinClauses
+     */
+    public function visitJoinClauses(array $joins);
+    
 }

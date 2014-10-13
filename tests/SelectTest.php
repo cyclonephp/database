@@ -44,9 +44,26 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
         $visitor->expects($this->once())
                 ->method('visitFromClause')
                 ->with($this->equalTo([
-                    DB::id('table1')->alias('tbl1')
+                    DB::id('table1')->alias('tbl1'),
+                    DB::id('table2')
                 ]));
-        DB::select()->from('table1 tbl1')->accept($visitor);
+        DB::select()->from('table1 tbl1')->from('table2')->accept($visitor);
+    }
+    
+    public function testVisitJoinClauses() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitJoinClauses')
+                ->with($this->equalTo([
+                    (new JoinClause(DB::id('table2'), 'INNER'))
+                        ->joinCondition(DB::expr('table1.id', '=', 'table2.table1_id')),
+                    (new JoinClause(DB::id('table3'), 'LEFT'))
+                        ->joinCondition(DB::expr('table2.id', '=', 'table3.table2_id'))
+                ]));
+        DB::select()->from('table1')
+                ->join('table2')->on('table1.id', '=', 'table2.table1_id')
+                ->leftJoin('table3')->on('table2.id', '=', 'table3.table2_id')
+                ->accept($visitor);
     }
     
 }

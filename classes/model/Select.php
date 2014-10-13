@@ -71,6 +71,7 @@ class Select extends AbstractExpression {
     public function accept(SelectVisitor $visitor) {
         $visitor->visitProjection($this->isDistinct, $this->projection);
         $visitor->visitFromClause($this->fromClause);
+        $visitor->visitJoinClauses($this->joins);
     }
 
     public function distinct($isDistinct = true) {
