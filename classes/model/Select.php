@@ -46,7 +46,7 @@ class Select extends AbstractExpression {
     /**
      * @var Expression
      */
-    private $havingCondition = array();
+    private $havingCondition;
 
     /**
      * @var Ordering[]
@@ -70,6 +70,7 @@ class Select extends AbstractExpression {
     
     public function accept(SelectVisitor $visitor) {
         $visitor->visitProjection($this->isDistinct, $this->projection);
+        $visitor->visitFromClause($this->fromClause);
     }
 
     public function distinct($isDistinct = true) {
@@ -88,33 +89,33 @@ class Select extends AbstractExpression {
         } else {
             $projection = array();
             foreach ($columns as $col) {
-                $projection [] = $this->createProjectionEntry($col);
+                $projection [] = $this->toExpression($col);
             }
             $this->projection = $projection;
         }
         return $this;
     }
     
-    private function createProjectionEntry($entrySpec) {
-        if ($entrySpec instanceof Expression)
-            return $entrySpec;
-        if (is_string($entrySpec)) {
-            $segments = explode(' ', $entrySpec);
+    private function toExpression($rawExpr) {
+        if ($rawExpr instanceof Expression)
+            return $rawExpr;
+        if (is_string($rawExpr)) {
+            $segments = explode(' ', $rawExpr);
             if (count($segments) == 1)
                 return DB::id($segments[0]);
             else
                 return DB::id($segments[0])->alias($segments[1]);
         } else
-            throw new \InvalidArgumentException("invalid projection entry: $entrySpec");
+            throw new \InvalidArgumentException("invalid expression: $rawExpr");
     }
 
     public function from($relation) {
-        $this->fromClause [] = $relation;
+        $this->fromClause [] = $this->toExpression($relation);
         return $this;
     }
 
     public function join($relation, $joinType = 'INNER') {
-        $join = new JoinClause($relation, $joinType);
+        $join = new JoinClause($this->toExpression($relation), $joinType);
         $this->joins []= $join;
         $this->lastJoin = $join;
         return $this;

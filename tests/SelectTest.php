@@ -21,8 +21,12 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
                 ->andHaving(DB::expr('a', '=', 'b'));
     }
     
+    private function mockVisitor() {
+        return $this->getMock('cyclonephp\\database\\model\\SelectVisitor');
+    }
+    
     public function testVisitProjection() {
-        $visitor = $this->getMock('cyclonephp\\database\\model\\SelectVisitor');
+        $visitor = $this->mockVisitor();
         $visitor->expects($this->once())
                 ->method('visitProjection')
                 ->with($this->equalTo(false),
@@ -33,6 +37,16 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
                        ]));
         DB::select()->columns('table1.a', 'table1.b t1b', DB::expr('table2.b')->alias('t2b'))
                 ->accept($visitor);
+    }
+    
+    public function testVisitFromClause() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitFromClause')
+                ->with($this->equalTo([
+                    DB::id('table1')->alias('tbl1')
+                ]));
+        DB::select()->from('table1 tbl1')->accept($visitor);
     }
     
 }

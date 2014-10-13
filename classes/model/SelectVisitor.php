@@ -4,7 +4,16 @@ namespace cyclonephp\database\model;
 
 interface SelectVisitor {
     
-    
+    /**
+     * 
+     * @param boolean $isDistinct
+     * @param Expression[] $projection
+     */
     public function visitProjection($isDistinct, array $projection);
+    
+    /**
+     * @param Expression[] fromClause
+     */
+    public function visitFromClause(array $fromClause);
     
 }
