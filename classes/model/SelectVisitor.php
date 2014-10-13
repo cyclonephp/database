@@ -21,4 +21,9 @@ interface SelectVisitor {
      */
     public function visitJoinClauses(array $joins);
     
+    /**
+     * @param Expression $whereCondition
+     */
+    public function visitWhereCondition(Expression $whereCondition = NULL);
+    
 }

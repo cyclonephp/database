@@ -66,4 +66,12 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
                 ->accept($visitor);
     }
     
+    public function testVisitWhereCondition() {
+        $visitor = $this->mockVisitor();
+        $visitor->expects($this->once())
+                ->method('visitWhereCondition')
+                ->with($this->equalTo(new BinaryExpression(DB::id('a'), '=', DB::id('b'))));
+        DB::select()->where(DB::expr('a', '=', 'b'))->accept($visitor);
+    }
+    
 }

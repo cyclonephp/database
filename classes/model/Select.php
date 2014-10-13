@@ -72,6 +72,7 @@ class Select extends AbstractExpression {
         $visitor->visitProjection($this->isDistinct, $this->projection);
         $visitor->visitFromClause($this->fromClause);
         $visitor->visitJoinClauses($this->joins);
+        $visitor->visitWhereCondition($this->whereCondition);
     }
 
     public function distinct($isDistinct = true) {
