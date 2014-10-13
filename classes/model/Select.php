@@ -38,6 +38,9 @@ class Select extends AbstractExpression {
      */
     private $whereCondition;
 
+    /**
+     * @var Expression[]
+     */
     private $groupByClause = array();
 
     /**
@@ -60,6 +63,9 @@ class Select extends AbstractExpression {
      */
     private $limit;
 
+    /**
+     * @var array
+     */
     private $unions = array();
 
     public function distinct($isDistinct = true) {
@@ -77,10 +83,23 @@ class Select extends AbstractExpression {
             $this->projection = array(DB::expr('*'));
         } else {
             foreach ($columns as $col) {
-                $this->projection [] = $col;
+                $this->projection [] = $this->createProjectionEntry($col);
             }
         }
         return $this;
+    }
+    
+    private function createProjectionEntry($entrySpec) {
+        if ($entrySpec instanceof Expression)
+            return $entrySpec;
+        if (is_string($entrySpec)) {
+            $segments = explode(' ', $entrySpec);
+            if (count($segments) == 1)
+                return DB::id($segments[0]);
+            else
+                return DB::id($segments[0])->alias($segments[1]);
+        } else
+            throw new \InvalidArgumentException("invalid projection entry: $entrySpec");
     }
 
     public function from($relation) {
@@ -127,7 +146,14 @@ class Select extends AbstractExpression {
     }
 
     public function groupBy() {
-        $this->groupByClause = func_get_args();
+        $args = func_get_args();
+        foreach ($args as $arg) {
+            if ($arg instanceof Expression) {
+                $this->groupByClause []= $arg;
+            } else {
+                $this->groupByClause []= DB::expr($arg);
+            }
+        }
         return $this;
     }
 
