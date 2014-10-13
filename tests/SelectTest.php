@@ -21,4 +21,18 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
                 ->andHaving(DB::expr('a', '=', 'b'));
     }
     
+    public function testVisitProjection() {
+        $visitor = $this->getMock('cyclonephp\\database\\model\\SelectVisitor');
+        $visitor->expects($this->once())
+                ->method('visitProjection')
+                ->with($this->equalTo(false),
+                       $this->equalTo([
+                           DB::id('table1.a'),
+                           DB::id('table1.b')->alias('t1b'),
+                           DB::expr('table2.b')->alias('t2b')
+                       ]));
+        DB::select()->columns('table1.a', 'table1.b t1b', DB::expr('table2.b')->alias('t2b'))
+                ->accept($visitor);
+    }
+    
 }

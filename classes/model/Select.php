@@ -67,6 +67,10 @@ class Select extends AbstractExpression {
      * @var array
      */
     private $unions = array();
+    
+    public function accept(SelectVisitor $visitor) {
+        $visitor->visitProjection($this->isDistinct, $this->projection);
+    }
 
     public function distinct($isDistinct = true) {
         $this->isDistinct = $isDistinct;
@@ -82,9 +86,11 @@ class Select extends AbstractExpression {
         if (empty($columns)) {
             $this->projection = array(DB::expr('*'));
         } else {
+            $projection = array();
             foreach ($columns as $col) {
-                $this->projection [] = $this->createProjectionEntry($col);
+                $projection [] = $this->createProjectionEntry($col);
             }
+            $this->projection = $projection;
         }
         return $this;
     }
