@@ -29,7 +29,8 @@ class AliasedExpression implements Expression {
     }
     
     public function compileSelf(\cyclonephp\database\Compiler $compiler) {
-        
+        return $this->expression->compileSelf($compiler) . ' AS '
+                . $compiler->escapeIdentifier($this->alias);
     }
     
     public function alias($alias) {

@@ -13,7 +13,7 @@ class ParamExpression extends AbstractExpression {
     }
     
     public function compileSelf(Compiler $compiler) {
-        
+        return $compiler->escapeParameter($this);
     }
     
     function getRawParameter() {

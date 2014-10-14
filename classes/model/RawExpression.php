@@ -19,7 +19,7 @@ class RawExpression extends AbstractExpression {
     }
     
     public function compileSelf(Compiler $compiler) {
-        throw new \Exception('not yet implemented');
+        return $this->expression;
     }
     
     function getExpression() {

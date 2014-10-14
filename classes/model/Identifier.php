@@ -24,7 +24,13 @@ class Identifier extends AbstractExpression {
     }
 
     public function compileSelf(Compiler $compiler) {
-        throw new \Exception('not yet implemented');
+        $compiledColumn = $compiler->escapeIdentifier($this->columnName);
+        if ($this->relationName === null) {
+            return $compiledColumn;
+        } else {
+            return $compiler->escapeIdentifier($this->relationName)
+                    . '.' . $compiledColumn;
+        }
     }
 
 }

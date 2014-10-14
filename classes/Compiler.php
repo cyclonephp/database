@@ -9,7 +9,10 @@ interface Compiler {
 
     public function compileSelect(Select $query);
     
-    public function escapeIdentifier(Identifier $identifier);
+    /**
+     * @param string $identifier
+     */
+    public function escapeIdentifier($identifier);
     
     public function escapeParameter(ParamExpression $param);
     
