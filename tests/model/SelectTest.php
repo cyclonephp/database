@@ -112,4 +112,14 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
         DB::select()->offset(20)->limit(true)->accept($visitor);
     }
     
+    public function testCompileSelf() {
+        $query = DB::select()->from('table');
+        $compiler = $this->getMock('cyclonephp\\database\\Compiler');
+        $compiler->expects($this->once())
+                ->method('compileSelect')
+                ->with($this->equalTo($query))
+                ->willReturn('subquery');
+        $this->assertEquals('(subquery)', $query->compileSelf($compiler));
+    }
+    
 }

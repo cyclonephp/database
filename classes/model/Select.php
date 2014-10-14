@@ -206,7 +206,7 @@ class Select extends AbstractExpression {
     }
     
     public function compileSelf(Compiler $compiler) {
-        throw new \Exception('not yet implemented');
+        return '(' . $compiler->compileSelect($this) . ')';
     }
 
 }
