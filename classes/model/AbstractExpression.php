@@ -7,4 +7,8 @@ abstract class AbstractExpression implements Expression {
         return new AliasedExpression($this, $alias);
     }
     
+    public function between(Expression $lowerBound, Expression $higherBound) {
+        return new BetweenExpression($this, $lowerBound, $higherBound);
+    }
+    
 }

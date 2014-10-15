@@ -14,4 +14,12 @@ interface Expression {
      * @return Identifier
      */
     public function alias($alias);
+    
+    /**
+     * 
+     * @param Expression $lowerBound
+     * @param Expression $higherBound
+     * @return BetweenExpression
+     */
+    public function between(Expression $lowerBound, Expression $higherBound);
 }

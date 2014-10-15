@@ -37,5 +37,8 @@ class AliasedExpression implements Expression {
         throw new \Exception("already an alias expression");
     }
 
-    
+    public function between(Expression $lowerBound, Expression $higherBound) {
+        throw new \Exception("aliased expressions cannot be used within between expressions");
+    }
+
 }
