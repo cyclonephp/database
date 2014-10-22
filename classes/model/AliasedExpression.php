@@ -1,6 +1,8 @@
 <?php
 namespace cyclonephp\database\model;
 
+use cyclonephp\database\Compiler;
+
 class AliasedExpression implements Expression {
     
     /**
@@ -28,7 +30,7 @@ class AliasedExpression implements Expression {
         return $this->alias;
     }
     
-    public function compileSelf(\cyclonephp\database\Compiler $compiler) {
+    public function compileSelf(Compiler $compiler) {
         return $this->expression->compileSelf($compiler) . ' AS '
                 . $compiler->escapeIdentifier($this->alias);
     }

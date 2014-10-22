@@ -92,7 +92,7 @@ class Select extends AbstractExpression {
 
     public function columnsArr($columns) {
         if (empty($columns)) {
-            $this->projection = array(DB::expr('*'));
+            $this->projection = array(DB::raw('*'));
         } else {
             $projection = array();
             foreach ($columns as $col) {

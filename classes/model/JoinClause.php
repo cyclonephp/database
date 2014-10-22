@@ -28,6 +28,27 @@ class JoinClause {
             $this->joinCondition = DB::expr($this->joinCondition, 'AND', $condition);
         }
         return $this;
-    }    
+    }
+    
+    /**
+     * @return Expression
+     */
+    function getJoinedRelation() {
+        return $this->joinedRelation;
+    }
+
+    /**
+     * @return Expression
+     */
+    function getJoinCondition() {
+        return $this->joinCondition;
+    }
+
+    /**
+     * @return string
+     */
+    function getJoinType() {
+        return $this->joinType;
+    }
     
 }

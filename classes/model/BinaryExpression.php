@@ -19,7 +19,9 @@ class BinaryExpression extends AbstractExpression {
     }
 
     public function compileSelf(Compiler $compiler) {
-        throw new \Exception('not yet implemented');
+        return '(' . $this->leftOperand->compileSelf($compiler). ') '
+                . $this->operator
+                . ' (' . $this->rightOperand->compileSelf($compiler) . ')';
     }
 
     public function leftOperand() {
