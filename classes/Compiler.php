@@ -14,6 +14,10 @@ interface Compiler {
      */
     public function escapeIdentifier($identifier);
     
-    public function escapeParameter(ParamExpression $param);
+    /**
+     * 
+     * @param string $param
+     */
+    public function escapeParameter($param);
     
 }

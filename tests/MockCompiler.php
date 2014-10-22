@@ -7,8 +7,8 @@ class MockCompiler extends AbstractCompiler {
         return '"' . $identifier . '"';
     }
 
-    public function escapeParameter(model\ParamExpression $param) {
-        return "'" . $param->getRawParameter() . "'";
+    public function escapeParameter($param) {
+        return "'" . $param . "'";
     }
 
 }

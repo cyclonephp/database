@@ -18,7 +18,7 @@ class UnaryExpression extends AbstractExpression {
     }
     
     public function compileSelf(Compiler $compiler) {
-        return $this->operator . ' (' . $this->operand->compileSelf($compiler) . ')';
+        return $this->operator . ' ' . $this->operand->compileSelf($compiler);
     }
 
 }

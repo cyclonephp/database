@@ -8,7 +8,7 @@ class ParamExpressionTest extends \PHPUnit_Framework_TestCase {
         $compiler = $this->getMock('cyclonephp\\database\\Compiler');
         $compiler->expects($this->once())
                 ->method('escapeParameter')
-                ->with($this->equalTo($expr))
+                ->with($this->equalTo($expr->getRawParameter()))
                 ->willReturn('"10"');
         $this->assertEquals('"10"', $expr->compileSelf($compiler));
     }

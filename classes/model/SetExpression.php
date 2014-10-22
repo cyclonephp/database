@@ -13,7 +13,15 @@ class SetExpression extends AbstractExpression {
     }
 
     public function compileSelf(Compiler $compiler) {
-        throw new \Exception('not yet implemented');
+        $compiledElems = [];
+        foreach ($this->elements as $elem) {
+            if ($elem instanceof Expression) {
+                $compiledElems []= $elem->compileSelf($compiler);
+            } else {
+                $compiledElems []= $compiler->escapeParameter($elem);
+            }
+        }
+        return '(' . implode(', ', $compiledElems) . ')';
     }
 
     public function elements() {
