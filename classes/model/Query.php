@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 use cyclonephp\database\DB;
 use cyclonephp\database\Compiler;
 
-class Select extends AbstractExpression {
+class Query extends AbstractExpression {
     
     /**
      * If <code>TRUE</code> then the query will be compiled as a
@@ -69,7 +69,7 @@ class Select extends AbstractExpression {
      */
     private $unions = array();
     
-    public function accept(SelectVisitor $visitor) {
+    public function accept(QueryVisitor $visitor) {
         $visitor->visitProjection($this->isDistinct, $this->projection);
         $visitor->visitFromClause($this->fromClause);
         $visitor->visitJoinClauses($this->joins);

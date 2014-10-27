@@ -2,7 +2,7 @@
 namespace cyclonephp\database\model;
 
 
-interface SelectVisitor {
+interface QueryVisitor {
     
     /**
      * 

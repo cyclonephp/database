@@ -1,15 +1,15 @@
 <?php
 namespace cyclonephp\database;
 
-use cyclonephp\database\model\SelectVisitor;
-use cyclonephp\database\model\Select;
+use cyclonephp\database\model\QueryVisitor;
+use cyclonephp\database\model\Query;
 use cyclonephp\database\model\JoinClause;
 
-abstract class AbstractCompiler implements Compiler, SelectVisitor {
+abstract class AbstractCompiler implements Compiler, QueryVisitor {
     
     private $queryString;
     
-    public function compileSelect(Select $query) {
+    public function compileSelect(Query $query) {
         $this->queryString = '';
         $query->accept($this);
         return $this->queryString;

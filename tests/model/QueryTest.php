@@ -4,7 +4,7 @@ namespace cyclonephp\database\model;
 use cyclonephp\database\DB;
 
 
-class SelectTest extends \PHPUnit_Framework_TestCase {
+class QueryTest extends \PHPUnit_Framework_TestCase {
     
     public function testBuilderAPI() {
         DB::select()
@@ -22,7 +22,7 @@ class SelectTest extends \PHPUnit_Framework_TestCase {
     }
     
     private function mockVisitor() {
-        return $this->getMock('cyclonephp\\database\\model\\SelectVisitor');
+        return $this->getMock('cyclonephp\\database\\model\\QueryVisitor');
     }
     
     public function testVisitProjection() {
