@@ -2,7 +2,7 @@
 
 namespace cyclonephp\database;
 
-use cyclonephp\database\model\Select;
+use cyclonephp\database\model\Query;
 use cyclonephp\database\model\SetExpression;
 use cyclonephp\database\model\UnaryExpression;
 use cyclonephp\database\model\BinaryExpression;
@@ -32,18 +32,18 @@ final class DB {
     }
 
     /**
-     * @return \cyclonephp\database\model\Select
+     * @return \cyclonephp\database\model\Query
      */
     public static function select() {
         $args = func_get_args();
-        $rval = new Select;
+        $rval = new Query;
         $rval->columnsArr($args);
         return $rval;
     }
 
     public static function selectDistinct() {
         $args = func_get_args();
-        $rval = new Select;
+        $rval = new Query;
         $rval->columnsArr($args);
         return $rval->distinct();
     }
