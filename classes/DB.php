@@ -3,6 +3,7 @@
 namespace cyclonephp\database;
 
 use cyclonephp\database\model\Query;
+use cyclonephp\database\model\Insert;
 use cyclonephp\database\model\SetExpression;
 use cyclonephp\database\model\UnaryExpression;
 use cyclonephp\database\model\BinaryExpression;
@@ -80,6 +81,13 @@ final class DB {
 
     public static function param($toBeEscaped) {
         return new ParamExpression($toBeEscaped);
+    }
+    
+    /**
+     * @param Insert $relation
+     */
+    public static function insert($relation) {
+        return new Insert(new Identifier(null, $relation));
     }
 
     private function __construct() {

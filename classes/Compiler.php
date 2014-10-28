@@ -2,11 +2,17 @@
 namespace cyclonephp\database;
 
 use cyclonephp\database\model\Query;
+use cyclonephp\database\model\Insert;
 use cyclonephp\database\model\Identifier;
 use cyclonephp\database\model\ParamExpression;
 
 interface Compiler {
 
+    /**
+     * 
+     * @param Query $query
+     * @return string
+     */
     public function compileSelect(Query $query);
     
     /**
@@ -19,5 +25,12 @@ interface Compiler {
      * @param string $param
      */
     public function escapeParameter($param);
+    
+    /**
+     * 
+     * @param Insert $insertStmt
+     * @return string
+     */
+    public function compileInsert(Insert $insertStmt);
     
 }

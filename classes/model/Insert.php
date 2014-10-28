@@ -1,6 +1,8 @@
 <?php
 namespace cyclonephp\database\model;
 
+use cyclonephp\database\DB;
+
 class Insert {
     
     /**
@@ -10,12 +12,12 @@ class Insert {
     private $relation;
     
     /**
-     * @var string[]
+     * @var Identifier[]
      */
     private $columns;
     
     /**
-     * @var array
+     * @var Expression[][]
      */
     private $values = array();
     
@@ -28,10 +30,32 @@ class Insert {
      * @return Insert
      */
     public function columns(array $columns) {
-        $this->columns = $columns;
+        $this->columns = [];
+        foreach ($columns as $colStr) {
+            $this->columns []= new Identifier(null, $colStr);
+        }
         return $this;
     }
     
+    public function getRelation() {
+        return $this->relation;
+    }
+
+    /**
+     * @return Identifier[]
+     */
+    public function getColumns() {
+        return $this->columns;
+    }
+
+    /**
+     * 
+     * @return Expression[][]
+     */
+    public function getValues() {
+        return $this->values;
+    }
+
     /**
      * 
      * @param Expression[] $rowData
@@ -39,9 +63,17 @@ class Insert {
      */
     public function values(array $rowData) {
         if ($this->columns === null) {
-            $this->columns = array_keys($rowData);
+            $this->columns(array_keys($rowData));
         }
-        $this->values []= $rowData;
+        $newRow = [];
+        foreach ($rowData as $k => $val) {
+            if ($val instanceof Expression) {
+                $newRow[$k] = $val;
+            } else {
+                $newRow[$k] = DB::param($val);
+            }
+        }
+        $this->values []= $newRow;
         return $this;
     }
 }

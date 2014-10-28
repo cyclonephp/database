@@ -4,6 +4,7 @@ namespace cyclonephp\database;
 use cyclonephp\database\model\QueryVisitor;
 use cyclonephp\database\model\Query;
 use cyclonephp\database\model\JoinClause;
+use cyclonephp\database\model\Insert;
 
 abstract class AbstractCompiler implements Compiler, QueryVisitor {
     
@@ -100,6 +101,17 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
             $this->queryString .= 'WHERE ' . $whereCondition->compileSelf($this) . ' ';
         }
     }
-
+    
+    public function compileInsert(Insert $insertStmt) {
+        $this->queryString = 'INSERT INTO '
+                . $insertStmt->getRelation()->compileSelf($this);
+        $compiledColumns = [];
+        foreach ($insertStmt->getColumns() as $col) {
+            $compiledColumns []= $col->compileSelf($this);
+        }
+        $this->queryString .= ' (' . implode(', ', $compiledColumns)
+                . ') VALUES ';
+        return $this->queryString;
+    }
     
 }

@@ -29,5 +29,14 @@ class AbstractCompilerTest extends \PHPUnit_Framework_TestCase {
                 . 'OFFSET 10 LIMIT 5', trim($actual));
     }
     
+    public function testCompileInsert() {
+        $stmt = DB::insert('table')
+                ->columns(['id', 'name', 'email'])
+                ->values([10, 'foo', 'foo@bar.com']);
+        $actual = (new MockCompiler)->compileInsert($stmt);
+        $this->assertEquals('INSERT INTO "table" ("id", "name", "email") '
+                . 'VALUES (\'10\', \'foo\', \'foo@bar.com\')', trim($actual));
+    }
+    
     
 }
