@@ -3,8 +3,7 @@ namespace cyclonephp\database;
 
 use cyclonephp\database\model\Query;
 use cyclonephp\database\model\InsertStatement;
-use cyclonephp\database\model\Identifier;
-use cyclonephp\database\model\ParamExpression;
+use cyclonephp\database\model\UpdateStatement;
 
 interface Compiler {
 
@@ -32,5 +31,7 @@ interface Compiler {
      * @return string
      */
     public function compileInsert(InsertStatement $insertStmt);
+    
+    public function compileUpdate(UpdateStatement $updateStmt);
     
 }

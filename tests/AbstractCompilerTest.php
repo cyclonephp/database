@@ -62,5 +62,18 @@ class AbstractCompilerTest extends \PHPUnit_Framework_TestCase {
                 , trim($actual));
     }
     
+    public function testCompileUpdate() {
+        $stmt = DB::update('table')
+                ->values([
+                    'name' => 'foo',
+                    'email' => 'foo@bar.com'
+                ])
+                ->where(DB::expr('id', '=', DB::param(1)));
+        $actual = (new MockCompiler)->compileUpdate($stmt);
+        $this->assertEquals('UPDATE "table" SET "name" = \'foo\', "email" = \'foo@bar.com\' '
+                . 'WHERE ("id") = (\'1\')',
+                trim($actual));
+    }
+    
     
 }

@@ -5,6 +5,8 @@ use cyclonephp\database\model\QueryVisitor;
 use cyclonephp\database\model\Query;
 use cyclonephp\database\model\JoinClause;
 use cyclonephp\database\model\InsertStatement;
+use cyclonephp\database\model\UpdateStatement;
+use cyclonephp\database\model\Expression;
 
 abstract class AbstractCompiler implements Compiler, QueryVisitor {
     
@@ -95,11 +97,21 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
         }
         $this->queryString .= implode(', ', $compiledProjectionEntries) . ' ';
     }
-
-    public function visitWhereCondition(model\Expression $whereCondition = NULL) {
-        if ($whereCondition !== null) {
-            $this->queryString .= 'WHERE ' . $whereCondition->compileSelf($this) . ' ';
+    
+    /**
+     * @param Expression $whereCondition
+     * @return string
+     */
+    private function compileWhereCondition(Expression $whereCondition = null) {
+        if ($whereCondition === null) {
+            return '';
+        } else {
+            return 'WHERE ' . $whereCondition->compileSelf($this) . ' ';
         }
+    }
+
+    public function visitWhereCondition(Expression $whereCondition = null) {
+        $this->queryString .= $this->compileWhereCondition($whereCondition);
     }
     
     public function compileInsert(InsertStatement $insertStmt) {
@@ -119,6 +131,18 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
             $compiledRecords []= implode(', ', $compiledValues);
         }
         $rval .= '(' . implode('), (', $compiledRecords) . ')';
+        return $rval;
+    }
+    
+    public function compileUpdate(UpdateStatement $updateStmt) {
+        $rval = 'UPDATE ' . $updateStmt->getRelation()->compileSelf($this) . ' SET ';
+        $compiledParts = [];
+        foreach ($updateStmt->getValues() as $columnName => $value) {
+            $compiledParts []= $this->escapeIdentifier($columnName) .
+                    ' = ' . $value->compileSelf($this);
+        }
+        $rval .= implode(', ', $compiledParts) . ' ';
+        $rval .= $this->compileWhereCondition($updateStmt->getWhereCondition());
         return $rval;
     }
     
