@@ -4,7 +4,7 @@ namespace cyclonephp\database;
 use cyclonephp\database\model\QueryVisitor;
 use cyclonephp\database\model\Query;
 use cyclonephp\database\model\JoinClause;
-use cyclonephp\database\model\Insert;
+use cyclonephp\database\model\InsertStatement;
 
 abstract class AbstractCompiler implements Compiler, QueryVisitor {
     
@@ -102,16 +102,24 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
         }
     }
     
-    public function compileInsert(Insert $insertStmt) {
-        $this->queryString = 'INSERT INTO '
+    public function compileInsert(InsertStatement $insertStmt) {
+        $rval = 'INSERT INTO '
                 . $insertStmt->getRelation()->compileSelf($this);
         $compiledColumns = [];
         foreach ($insertStmt->getColumns() as $col) {
             $compiledColumns []= $col->compileSelf($this);
         }
-        $this->queryString .= ' (' . implode(', ', $compiledColumns)
-                . ') VALUES ';
-        return $this->queryString;
+        $rval .= ' (' . implode(', ', $compiledColumns). ') VALUES ';
+        $compiledRecords = [];
+        foreach ($insertStmt->getValues() as $record) {
+            $compiledValues = [];
+            foreach ($record as $value) {
+                $compiledValues []= $value->compileSelf($this);
+            }
+            $compiledRecords []= implode(', ', $compiledValues);
+        }
+        $rval .= '(' . implode('), (', $compiledRecords) . ')';
+        return $rval;
     }
     
 }

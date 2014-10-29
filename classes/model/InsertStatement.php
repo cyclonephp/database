@@ -3,7 +3,7 @@ namespace cyclonephp\database\model;
 
 use cyclonephp\database\DB;
 
-class Insert {
+class InsertStatement {
     
     /**
      *
@@ -27,7 +27,7 @@ class Insert {
     
     /**
      * @param array $columns a list of strings containing column names.
-     * @return Insert
+     * @return InsertStatement
      */
     public function columns(array $columns) {
         $this->columns = [];
@@ -59,7 +59,7 @@ class Insert {
     /**
      * 
      * @param Expression[] $rowData
-     * @return Insert
+     * @return InsertStatement
      */
     public function values(array $rowData) {
         if ($this->columns === null) {

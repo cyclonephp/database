@@ -2,7 +2,7 @@
 namespace cyclonephp\database;
 
 use cyclonephp\database\model\Query;
-use cyclonephp\database\model\Insert;
+use cyclonephp\database\model\InsertStatement;
 use cyclonephp\database\model\Identifier;
 use cyclonephp\database\model\ParamExpression;
 
@@ -28,9 +28,9 @@ interface Compiler {
     
     /**
      * 
-     * @param Insert $insertStmt
+     * @param InsertStatement $insertStmt
      * @return string
      */
-    public function compileInsert(Insert $insertStmt);
+    public function compileInsert(InsertStatement $insertStmt);
     
 }
