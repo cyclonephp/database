@@ -13,7 +13,7 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
     
     private $queryString;
     
-    public function compileSelect(Query $query) {
+    public function compileQuery(Query $query) {
         $this->queryString = '';
         $query->accept($this);
         return $this->queryString;

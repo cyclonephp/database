@@ -17,7 +17,7 @@ class AbstractCompilerTest extends \PHPUnit_Framework_TestCase {
                 ->orderBy('x.y')
                 ->offset(10)
                 ->limit(5);
-        $actual = (new MockCompiler)->compileSelect($query);
+        $actual = (new MockCompiler)->compileQuery($query);
         $this->assertNotNull($actual);
         $this->assertEquals('SELECT DISTINCT * FROM "table1" AS "a", "table2" AS "b" '
                 . 'INNER JOIN "table3" AS "c" ON ("b"."id") = ("c"."table2_id") '

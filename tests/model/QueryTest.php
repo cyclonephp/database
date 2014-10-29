@@ -116,7 +116,7 @@ class QueryTest extends \PHPUnit_Framework_TestCase {
         $query = DB::select()->from('table');
         $compiler = $this->getMock('cyclonephp\\database\\Compiler');
         $compiler->expects($this->once())
-                ->method('compileSelect')
+                ->method('compileQuery')
                 ->with($this->equalTo($query))
                 ->willReturn('subquery');
         $this->assertEquals('(subquery)', $query->compileSelf($compiler));

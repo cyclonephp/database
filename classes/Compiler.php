@@ -13,7 +13,7 @@ interface Compiler {
      * @param Query $query
      * @return string
      */
-    public function compileSelect(Query $query);
+    public function compileQuery(Query $query);
     
     /**
      * @param string $identifier

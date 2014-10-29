@@ -206,7 +206,7 @@ class Query extends AbstractExpression {
     }
     
     public function compileSelf(Compiler $compiler) {
-        return '(' . $compiler->compileSelect($this) . ')';
+        return '(' . $compiler->compileQuery($this) . ')';
     }
 
 }
