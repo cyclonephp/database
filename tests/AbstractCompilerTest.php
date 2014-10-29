@@ -75,5 +75,17 @@ class AbstractCompilerTest extends \PHPUnit_Framework_TestCase {
                 trim($actual));
     }
     
+    public function testCompileDelete() {
+        $stmt = DB::delete('table')
+                ->where(DB::expr('id', '=', DB::param(2)))
+                ->orderBy('name')
+                ->offset(20)->limit(10);
+        $actual = (new MockCompiler)->compileDelete($stmt);
+        $this->assertEquals('DELETE FROM "table" '
+                . 'WHERE ("id") = (\'2\') '
+                . 'ORDER BY "name" ASC '
+                . 'OFFSET 20 LIMIT 10', trim($actual));
+    }
+    
     
 }
