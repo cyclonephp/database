@@ -3,7 +3,9 @@
 namespace cyclonephp\database;
 
 use cyclonephp\database\model\Query;
-use cyclonephp\database\model\Insert;
+use cyclonephp\database\model\InsertStatement;
+use cyclonephp\database\model\UpdateStatement;
+use cyclonephp\database\model\DeleteStatement;
 use cyclonephp\database\model\SetExpression;
 use cyclonephp\database\model\UnaryExpression;
 use cyclonephp\database\model\BinaryExpression;
@@ -84,10 +86,18 @@ final class DB {
     }
     
     /**
-     * @param Insert $relation
+     * @param InsertStatement $relation
      */
     public static function insert($relation) {
-        return new Insert(new Identifier(null, $relation));
+        return new InsertStatement(new Identifier(null, $relation));
+    }
+    
+    public static function update($relation) {
+        return new UpdateStatement(new Identifier(null, $relation));
+    }
+    
+    public static function delete($relation) {
+        return new DeleteStatement(new Identifier(null, $relation));
     }
 
     private function __construct() {

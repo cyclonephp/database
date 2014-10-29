@@ -4,7 +4,10 @@ namespace cyclonephp\database;
 use cyclonephp\database\model\QueryVisitor;
 use cyclonephp\database\model\Query;
 use cyclonephp\database\model\JoinClause;
-use cyclonephp\database\model\Insert;
+use cyclonephp\database\model\InsertStatement;
+use cyclonephp\database\model\UpdateStatement;
+use cyclonephp\database\model\DeleteStatement;
+use cyclonephp\database\model\Expression;
 
 abstract class AbstractCompiler implements Compiler, QueryVisitor {
     
@@ -38,7 +41,7 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
         }
     }
 
-    public function visitHavingCondition(model\Expression $havingCondition = null) {
+    public function visitHavingCondition(Expression $havingCondition = null) {
         if ($havingCondition !== null) {
             $this->queryString .= 'HAVING '
                     . $havingCondition->compileSelf($this) . ' ';
@@ -61,27 +64,50 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
         $rval .= $joinClause->getJoinCondition()->compileSelf($this);
         return $rval;
     }
-
-    public function visitOffsetLimit($offset, $limit) {
+    
+    /**
+     * 
+     * @param int $offset
+     * @param int $limit
+     * @return string
+     */
+    private function compileOffsetLimit($offset, $limit) {
+        $rval = '';
         if ($offset !== null) {
-            $this->queryString .= 'OFFSET ' . $offset . ' ';
+            $rval .= 'OFFSET ' . $offset . ' ';
         }
         if ($limit !== null) {
-            $this->queryString .= 'LIMIT ' . $limit;
+            $rval .= 'LIMIT ' . $limit;
         }
+        return $rval;
     }
 
-    public function visitOrderByClause(array $orderByClause) {
-        if (!empty($orderByClause)) {
-            $this->queryString .= 'ORDER BY ';
+    public function visitOffsetLimit($offset, $limit) {
+        $this->queryString .= $this->compileOffsetLimit($offset, $limit);
+    }
+    
+    /**
+     * @param array $orderByClause
+     * @return string
+     */
+    private function compileOrderbyClause(array $orderByClause) {
+        if (empty($orderByClause)) {
+            return '';
+        } else {
+            $rval = 'ORDER BY ';
             $compiledOrderByEntries = [];
             foreach ($orderByClause as $orderByEntry) {
                 $entry = $orderByEntry->orderingExpression()->compileSelf($this)
                         . ' ' . $orderByEntry->direction();
                 $compiledOrderByEntries []= $entry;
             }
-            $this->queryString .= implode(', ', $compiledOrderByEntries) . ' ';
+            $rval .= implode(', ', $compiledOrderByEntries) . ' ';
+            return $rval;
         }
+    }
+
+    public function visitOrderByClause(array $orderByClause) {
+        $this->queryString .= $this->compileOrderbyClause($orderByClause);
     }
 
     public function visitProjection($isDistinct, array $projection) {
@@ -95,23 +121,61 @@ abstract class AbstractCompiler implements Compiler, QueryVisitor {
         }
         $this->queryString .= implode(', ', $compiledProjectionEntries) . ' ';
     }
-
-    public function visitWhereCondition(model\Expression $whereCondition = NULL) {
-        if ($whereCondition !== null) {
-            $this->queryString .= 'WHERE ' . $whereCondition->compileSelf($this) . ' ';
+    
+    /**
+     * @param Expression $whereCondition
+     * @return string
+     */
+    private function compileWhereCondition(Expression $whereCondition = null) {
+        if ($whereCondition === null) {
+            return '';
+        } else {
+            return 'WHERE ' . $whereCondition->compileSelf($this) . ' ';
         }
     }
+
+    public function visitWhereCondition(Expression $whereCondition = null) {
+        $this->queryString .= $this->compileWhereCondition($whereCondition);
+    }
     
-    public function compileInsert(Insert $insertStmt) {
-        $this->queryString = 'INSERT INTO '
+    public function compileInsert(InsertStatement $insertStmt) {
+        $rval = 'INSERT INTO '
                 . $insertStmt->getRelation()->compileSelf($this);
         $compiledColumns = [];
         foreach ($insertStmt->getColumns() as $col) {
             $compiledColumns []= $col->compileSelf($this);
         }
-        $this->queryString .= ' (' . implode(', ', $compiledColumns)
-                . ') VALUES ';
-        return $this->queryString;
+        $rval .= ' (' . implode(', ', $compiledColumns). ') VALUES ';
+        $compiledRecords = [];
+        foreach ($insertStmt->getValues() as $record) {
+            $compiledValues = [];
+            foreach ($record as $value) {
+                $compiledValues []= $value->compileSelf($this);
+            }
+            $compiledRecords []= implode(', ', $compiledValues);
+        }
+        $rval .= '(' . implode('), (', $compiledRecords) . ')';
+        return $rval;
+    }
+    
+    public function compileUpdate(UpdateStatement $updateStmt) {
+        $rval = 'UPDATE ' . $updateStmt->getRelation()->compileSelf($this) . ' SET ';
+        $compiledParts = [];
+        foreach ($updateStmt->getValues() as $columnName => $value) {
+            $compiledParts []= $this->escapeIdentifier($columnName) .
+                    ' = ' . $value->compileSelf($this);
+        }
+        $rval .= implode(', ', $compiledParts) . ' ';
+        $rval .= $this->compileWhereCondition($updateStmt->getWhereCondition());
+        return $rval;
+    }
+    
+    public function compileDelete(DeleteStatement $deleteStmt) {
+        $rval = 'DELETE FROM ' . $deleteStmt->getRelation()->compileSelf($this) . ' ';
+        $rval .= $this->compileWhereCondition($deleteStmt->getWhereCondition());
+        $rval .= $this->compileOrderbyClause($deleteStmt->getOrderByClause());
+        $rval .= $this->compileOffsetLimit($deleteStmt->getOffset(), $deleteStmt->getLimit());
+        return $rval;
     }
     
 }

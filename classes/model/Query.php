@@ -154,11 +154,11 @@ class Query extends AbstractExpression {
         }
     }
 
-    public function orderBy($column, $direction = 'ASC') {
-        if (!$column instanceof Expression) {
-            $column = DB::expr($column);
+    public function orderBy($orderingExpression, $direction = Ordering::ASCENDING) {
+        if (!$orderingExpression instanceof Expression) {
+            $orderingExpression = DB::expr($orderingExpression);
         }
-        $this->orderByClause []= new Ordering($column, $direction);
+        $this->orderByClause []= new Ordering($orderingExpression, $direction);
         return $this;
     }
 

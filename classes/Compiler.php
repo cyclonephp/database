@@ -2,9 +2,9 @@
 namespace cyclonephp\database;
 
 use cyclonephp\database\model\Query;
-use cyclonephp\database\model\Insert;
-use cyclonephp\database\model\Identifier;
-use cyclonephp\database\model\ParamExpression;
+use cyclonephp\database\model\InsertStatement;
+use cyclonephp\database\model\UpdateStatement;
+use cyclonephp\database\model\DeleteStatement;
 
 interface Compiler {
 
@@ -28,9 +28,21 @@ interface Compiler {
     
     /**
      * 
-     * @param Insert $insertStmt
+     * @param InsertStatement $insertStmt
      * @return string
      */
-    public function compileInsert(Insert $insertStmt);
+    public function compileInsert(InsertStatement $insertStmt);
+
+    /**
+     * @param UpdateStatement $updateStmt
+     * @return string
+     */
+    public function compileUpdate(UpdateStatement $updateStmt);
+    
+    /**
+     * @param DeleteStatement $deleteStmt
+     * @return string
+     */
+    public function compileDelete(DeleteStatement $deleteStmt);
     
 }
