@@ -32,10 +32,34 @@ class AbstractCompilerTest extends \PHPUnit_Framework_TestCase {
     public function testCompileInsert() {
         $stmt = DB::insert('table')
                 ->columns(['id', 'name', 'email'])
-                ->values([10, 'foo', 'foo@bar.com']);
+                ->values([10, 'foo', 'foo@bar.com'])
+                ->values([20, 'bar', 'bar@foo.com']);
         $actual = (new MockCompiler)->compileInsert($stmt);
         $this->assertEquals('INSERT INTO "table" ("id", "name", "email") '
-                . 'VALUES (\'10\', \'foo\', \'foo@bar.com\')', trim($actual));
+                . 'VALUES (\'10\', \'foo\', \'foo@bar.com\'), '
+                . "('20', 'bar', 'bar@foo.com')", trim($actual));
+    }
+    
+    public function testCompileInsertNoExplicitColumns() {
+        $stmt = DB::insert('table')
+                ->values(['id' => 10, 'name' => 'foo', 'email' => 'foo@bar.com'])
+                ->values([20, 'bar', 'bar@foo.com']);
+        $actual = (new MockCompiler)->compileInsert($stmt);
+        $this->assertEquals('INSERT INTO "table" ("id", "name", "email") '
+                . 'VALUES (\'10\', \'foo\', \'foo@bar.com\'), '
+                . "('20', 'bar', 'bar@foo.com')", trim($actual));
+    }
+    
+    public function testCompileInsertWithSubquery() {
+        $stmt = DB::insert('table')
+                ->values(['id' => DB::select('what')
+                            ->from('ever')
+                            ->limit(1),
+                          'name' => 'foo']);
+        $actual = (new MockCompiler)->compileInsert($stmt);
+        $this->assertEquals('INSERT INTO "table" ("id", "name") '
+                . 'VALUES ((SELECT "what" FROM "ever" LIMIT 1), \'foo\')'
+                , trim($actual));
     }
     
     
