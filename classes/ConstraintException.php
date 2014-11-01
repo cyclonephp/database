@@ -10,6 +10,13 @@ class ConstraintException extends DatabaseException {
     const FOREIGNKEY = 'foreignkey';
     
     const CUSTOM = 'custom';
+    
+    /**
+     * @return \cyclonephp\database\ConstraintExceptionBuilder
+     */
+    public static function builder() {
+        return new ConstraintExceptionBuilder;
+    }
 
     /**
      * @var string
