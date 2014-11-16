@@ -38,15 +38,15 @@ abstract class AbstractQueryResult implements QueryResult {
      * @return AbstractQueryResult $this
      */
     public function indexBy($column) {
-        $this->_indexBy = $column;
+        $this->indexBy = $column;
         return $this;
     }
     
     public function key() {
-        if (is_null($this->indexBy))
-            return $this->idx;
+        if ($this->indexBy === null)
+            return $this->index;
         
-        return $this->_current_row[$this->_index_by];
+        return $this->currentRow[$this->indexBy];
     }
     
     public function getSingleRow() {
